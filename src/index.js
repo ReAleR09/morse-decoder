@@ -37,8 +37,30 @@ const MORSE_TABLE = {
     '-----':  '0',
 };
 
+const SPACE = '**********';
+const DOUBLES = {
+    '00': '',
+    '10': '.',
+    '11': '-' 
+};
+
+function decodeBitsIntoLetter(raw) {
+    if(raw === SPACE) return ' ';
+
+    const morseLetter = raw
+        .match(/\d{2}/g)                    // split into 'bit' doubles
+        .map((double) => DOUBLES[double])   // convert 'doubles' into morse signs
+        .join('');                          // concatenate into morse word
+    return MORSE_TABLE[morseLetter];        // morse word into human language letter
+}
+
 function decode(expr) {
-    // write your solution here
+    // splitting into chunks of ten 'bits'
+    const rawSymbols = expr.match(/.{10}/g);
+
+    // every 10 bits of input got converted into real letter, then concatenated to the output 
+    return rawSymbols.reduce((prev, curr) => prev + decodeBitsIntoLetter(curr), '');
+
 }
 
 module.exports = {
